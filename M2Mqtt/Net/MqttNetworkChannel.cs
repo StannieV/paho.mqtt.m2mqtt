@@ -179,6 +179,22 @@ namespace uPLibrary.Networking.M2Mqtt
 #else
         public MqttNetworkChannel(string remoteHostName, int remotePort, bool secure, X509Certificate caCert, X509Certificate clientCert, MqttSslProtocols sslProtocol)
 #endif
+        { 
+
+            this.remoteHostName = remoteHostName;
+            this.remoteIpAddress = LookupRemoteIpAddress(remoteHostName);
+            this.remotePort = remotePort;
+            this.secure = secure;
+            this.caCert = caCert;
+            this.clientCert = clientCert;
+            this.sslProtocol = sslProtocol;
+#if !(MF_FRAMEWORK_VERSION_V4_2 || MF_FRAMEWORK_VERSION_V4_3 || COMPACT_FRAMEWORK)
+            this.userCertificateValidationCallback = userCertificateValidationCallback;
+            this.userCertificateSelectionCallback = userCertificateSelectionCallback;
+#endif
+        }
+
+        private IPAddress LookupRemoteIpAddress(string remoteHostName)
         {
             IPAddress remoteIpAddress = null;
             try
@@ -207,18 +223,7 @@ namespace uPLibrary.Networking.M2Mqtt
                     throw new Exception("No address found for the remote host name");
                 }
             }
-
-            this.remoteHostName = remoteHostName;
-            this.remoteIpAddress = remoteIpAddress;
-            this.remotePort = remotePort;
-            this.secure = secure;
-            this.caCert = caCert;
-            this.clientCert = clientCert;
-            this.sslProtocol = sslProtocol;
-#if !(MF_FRAMEWORK_VERSION_V4_2 || MF_FRAMEWORK_VERSION_V4_3 || COMPACT_FRAMEWORK)
-            this.userCertificateValidationCallback = userCertificateValidationCallback;
-            this.userCertificateSelectionCallback = userCertificateSelectionCallback;
-#endif
+            return remoteIpAddress;
         }
 
         /// <summary>
@@ -226,6 +231,7 @@ namespace uPLibrary.Networking.M2Mqtt
         /// </summary>
         public void Connect()
         {
+            this.remoteIpAddress = LookupRemoteIpAddress(this.remoteHostName);
             this.socket = new Socket(this.remoteIpAddress.GetAddressFamily(), SocketType.Stream, ProtocolType.Tcp);
             // try connection to the broker
             this.socket.Connect(new IPEndPoint(this.remoteIpAddress, this.remotePort));
