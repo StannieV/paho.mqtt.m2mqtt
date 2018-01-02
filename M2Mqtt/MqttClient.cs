@@ -1341,8 +1341,9 @@ namespace uPLibrary.Networking.M2Mqtt
             int readBytes = 0;
             byte[] fixedHeaderFirstByte = new byte[1];
             byte msgType;
+	    bool continueReceive = true;
 
-            while (this.isRunning)
+            while (this.isRunning && continueReceive)
             {
                 try
                 {
@@ -1618,6 +1619,7 @@ namespace uPLibrary.Networking.M2Mqtt
                     
                     if (close)
                     {
+		        continueReceive = false;
                         // wake up thread that will notify connection is closing
                         this.OnConnectionClosing();
                     }
