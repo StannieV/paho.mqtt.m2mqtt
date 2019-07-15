@@ -232,7 +232,7 @@ namespace uPLibrary.Networking.M2Mqtt
         /// <summary>
         /// The send timeout
         /// </summary>
-        public int SendTimeout { get; set; } => MqttSettings.MQTT_DEFAULT_TIMEOUT;
+        public int SendTimeout { get; set; } = MqttSettings.MQTT_DEFAULT_TIMEOUT;
 
 #if BROKER
         /// <summary>
