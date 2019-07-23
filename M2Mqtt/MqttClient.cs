@@ -229,6 +229,11 @@ namespace uPLibrary.Networking.M2Mqtt
         /// </summary>
         public MqttProtocolVersion ProtocolVersion { get; set; }
 
+        /// <summary>
+        /// The send timeout
+        /// </summary>
+        public int SendTimeout { get; set; }  = MqttSettings.MQTT_DEFAULT_TIMEOUT;
+
 #if BROKER
         /// <summary>
         /// MQTT Client Session
@@ -1036,7 +1041,7 @@ namespace uPLibrary.Networking.M2Mqtt
         /// <returns>MQTT message response</returns>
         private MqttMsgBase SendReceive(byte[] msgBytes)
         {
-            return this.SendReceive(msgBytes, MqttSettings.MQTT_DEFAULT_TIMEOUT);
+            return this.SendReceive(msgBytes, SendTimeout);
         }
 
         /// <summary>
@@ -1103,7 +1108,7 @@ namespace uPLibrary.Networking.M2Mqtt
         /// <returns>MQTT message response</returns>
         private MqttMsgBase SendReceive(MqttMsgBase msg)
         {
-            return this.SendReceive(msg, MqttSettings.MQTT_DEFAULT_TIMEOUT);
+            return this.SendReceive(msg, SendTimeout);
         }
 
         /// <summary>
